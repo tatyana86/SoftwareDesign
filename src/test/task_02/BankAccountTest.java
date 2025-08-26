@@ -1,6 +1,7 @@
 package test.task_02;
 
 import main.task_02.BankAccount;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,9 +22,23 @@ class BankAccountTest {
     }
 
     @Test
+    void testNegativeDeposit() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            account.deposit(-50.0);
+        });
+    }
+
+    @Test
     void testWithdraw() {
         account.withdraw(30.0);
         assertEquals(70.0, account.getBalance(), 0.001);
+    }
+
+    @Test
+    void testNegativeWithdraw() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            account.withdraw(-50.0);
+        });
     }
 
     @Test
@@ -45,9 +60,10 @@ class BankAccountTest {
         account.deposit(50.0);
         assertEquals(150.0, account.getBalance(), 0.001);
 
-        // отрицательная сумма баланса достижима
-        account.withdraw(200);
-        assertEquals(-50, account.getBalance(), 0.001);
+        // отрицательная сумма баланса теперь НЕдостижима
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            account.withdraw(200);
+        });
     }
 
 }
